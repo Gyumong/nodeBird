@@ -1,3 +1,4 @@
+import React from "react";
 import { HYDRATE } from "next-redux-wrapper";
 import user from "./user";
 import post from "./post";
