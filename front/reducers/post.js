@@ -13,6 +13,14 @@ export const init = {
           src:
             "https://img1.daumcdn.net/thumb/C428x428/?scode=mtistory2&fname=https%3A%2F%2Ftistory4.daumcdn.net%2Ftistory%2F4328096%2Fattach%2F032fa1057f75438197365a6da7cc794c",
         },
+        {
+          src:
+            "https://img1.daumcdn.net/thumb/C428x428/?scode=mtistory2&fname=https%3A%2F%2Ftistory4.daumcdn.net%2Ftistory%2F4328096%2Fattach%2F032fa1057f75438197365a6da7cc794c",
+        },
+        {
+          src:
+            "https://img1.daumcdn.net/thumb/C428x428/?scode=mtistory2&fname=https%3A%2F%2Ftistory4.daumcdn.net%2Ftistory%2F4328096%2Fattach%2F032fa1057f75438197365a6da7cc794c",
+        },
       ],
       Comments: [
         {

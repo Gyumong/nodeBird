@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import ButtonGroup from "antd/lib/button/button-group";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
+import PostCardContent from "./PostCardContent";
 const PostCard = ({ post }) => {
   const [liked, setLiked] = useState(false);
   const [commentFormOpen, setCommentFormOpen] = useState(false);
@@ -57,7 +58,7 @@ const PostCard = ({ post }) => {
       >
         <Card.Meta
           title={post.User.nickname}
-          description={post.content}
+          description={<PostCardContent postData={post.content} />}
           avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
         />
       </Card>
