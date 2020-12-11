@@ -9,13 +9,12 @@ const configureStore = () => {
   const sagaMiddleware = createSagaMiddleware();
   const middlewares = [sagaMiddleware];
 
-  store.sagaTask = sagaMiddleware.run(rootSaga); // 사가미들웨어 실행 rootSaga는 rootReducer와 같은 느낌
-
   const enhancer =
     process.env.NODE_ENV === "production"
       ? compose(applyMiddleware(...middlewares))
       : composeWithDevTools(applyMiddleware(...middlewares));
   const store = createStore(reducer, enhancer);
+  store.sagaTask = sagaMiddleware.run(rootSaga); // 사가미들웨어 실행 rootSaga는 rootReducer와 같은 느낌
   return store;
 };
 
