@@ -3,8 +3,14 @@ import { createWrapper } from "next-redux-wrapper";
 import { applyMiddleware, compose, createStore } from "redux";
 import reducer from "../reducers";
 import { composeWithDevTools } from "redux-devtools-extension";
+import createSagaMiddleware from "redux-saga";
+import rootSaga from "../sagas";
 const configureStore = () => {
-  const middlewares = [];
+  const sagaMiddleware = createSagaMiddleware();
+  const middlewares = [sagaMiddleware];
+
+  store.sagaTask = sagaMiddleware.run(rootSaga); // 사가미들웨어 실행 rootSaga는 rootReducer와 같은 느낌
+
   const enhancer =
     process.env.NODE_ENV === "production"
       ? compose(applyMiddleware(...middlewares))

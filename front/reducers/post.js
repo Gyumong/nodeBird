@@ -7,7 +7,7 @@ export const init = {
         id: 1,
         nickname: "규몽",
       },
-      content: "첫번째 게시글 #해시태그",
+      content: "첫번째 게시글 #해시태그 해시태그###해시태그",
       Images: [
         {
           src:
