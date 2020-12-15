@@ -62,8 +62,6 @@ const PostCard = ({ post }) => {
           avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
         />
       </Card>
-      {/* <CommentForm />
-      <Comments /> */}
       {commentFormOpen && (
         <>
           <CommentForm post={post} />

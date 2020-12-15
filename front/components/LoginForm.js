@@ -14,20 +14,26 @@ const FormBlock = styled(Form)`
   padding: 10px;
 `;
 const LoginForm = () => {
-  const { isLoggingIn } = useSelector((state) => state.user);
+  const { logInLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const [id, onChangeId] = useInput("");
+  const [email, onChangeEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
 
   const onSubmitForm = useCallback(() => {
-    console.log(id, password);
-    dispatch(loginRequestAction(id, password));
-  }, [id, password]);
+    console.log(email, password);
+    dispatch(loginRequestAction(email, password));
+  }, [email, password]);
   return (
     <FormBlock onFinish={onSubmitForm}>
       <div>
-        <label htmlFor="user-id">아이디</label>
-        <Input name="user-id" value={id} onChange={onChangeId} required />
+        <label htmlFor="user-email">이메일</label>
+        <Input
+          name="user-email"
+          value={email}
+          onChange={onChangeEmail}
+          required
+          type="email"
+        />
       </div>
       <div>
         <label htmlFor="user-password">비밀번호</label>
@@ -39,7 +45,7 @@ const LoginForm = () => {
         />
       </div>
       <ButtonBlock>
-        <Button type="primary" htmlType="submit" loading={isLoggingIn}>
+        <Button type="primary" htmlType="submit" loading={logInLoading}>
           로그인
         </Button>
         <Link href="/signup">
