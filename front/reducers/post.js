@@ -65,16 +65,16 @@ export const addComment = (data) => ({
   data,
 });
 
-const dummyPost = {
+const dummyPost = (data) => ({
   id: 2,
-  content: "더미데이터 임니다",
+  content: data,
   User: {
     id: 1,
     nickname: "밈구",
   },
   Images: [],
   Comments: [],
-};
+});
 const reducer = (state = init, action) => {
   switch (action.type) {
     case ADD_POST_REQUEST:
@@ -87,7 +87,7 @@ const reducer = (state = init, action) => {
     case ADD_POST_SUCCESS:
       return {
         ...state,
-        mainPosts: [dummyPost, ...state.mainPosts], // 앞에다 추가해야 게시글 맨 위에 올라옴
+        mainPosts: [dummyPost(action.data), ...state.mainPosts], // 앞에다 추가해야 게시글 맨 위에 올라옴
         addPostLoading: false,
         addPostDone: true,
       };

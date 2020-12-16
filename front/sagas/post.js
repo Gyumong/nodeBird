@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { all, call, put, takeLatest, fork } from "redux-saga/effects";
+import { all, call, put, takeLatest, fork, delay } from "redux-saga/effects";
 import {
   ADD_POST_REQUEST,
   ADD_POST_SUCCESS,
@@ -14,10 +14,10 @@ function PostAPI(data) {
 
 function* addPost(action) {
   try {
-    const result = yield call(PostAPI, action.data);
+    // const result = yield call(PostAPI, action.data);
     yield put({
       type: ADD_POST_SUCCESS,
-      data: result.data,
+      data: action.data,
     });
   } catch (e) {
     yield put({
