@@ -1,4 +1,6 @@
 import React from "react";
+import shortId from "shortid";
+
 export const init = {
   mainPosts: [
     {
@@ -66,7 +68,7 @@ export const addComment = (data) => ({
 });
 
 const dummyPost = (data) => ({
-  id: 2,
+  id: shortId.generate(),
   content: data,
   User: {
     id: 1,
@@ -74,6 +76,15 @@ const dummyPost = (data) => ({
   },
   Images: [],
   Comments: [],
+});
+
+const dummyComment = (data) => ({
+  id: shortId.generate(),
+  content: data,
+  User: {
+    id: 1,
+    nickname: "밈구",
+  },
 });
 const reducer = (state = init, action) => {
   switch (action.type) {
@@ -105,8 +116,16 @@ const reducer = (state = init, action) => {
         addCommentDone: false,
       };
     case ADD_COMMENT_SUCCESS:
+      const postIndex = state.mainPosts.findIndex(
+        (v) => v.id === action.data.postId
+      );
+      const post = { ...state.mainPosts[postIndex] };
+      post.Comments = [dummyComment(action.data.content), ...post.Comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = post;
       return {
         ...state,
+        mainPosts,
         addCommentLoading: false,
         addCommentDone: true,
       };

@@ -32,10 +32,10 @@ function CommentAPI(data) {
 }
 function* addComment(action) {
   try {
-    const result = yield call(CommentAPI, action.data);
+    // const result = yield call(CommentAPI, action.data);
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      data: result.data,
+      data: action.data,
     });
   } catch (e) {
     yield put({
