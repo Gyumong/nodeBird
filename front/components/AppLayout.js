@@ -26,7 +26,8 @@ const SearchInput = styled(Input.Search)`
 `;
 
 const AppLayout = ({ children }) => {
-  const me = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
+  //  const me = useSelector((state) => state.user); << 구조분해로 me 안가져와서 전체 객체 받아와가지고 한참 에러남
   return (
     <div>
       <Menu mode="horizontal">
