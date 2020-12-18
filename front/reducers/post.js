@@ -5,52 +5,12 @@ import shortId from "shortid";
 import produce from "immer";
 import faker from "faker";
 export const init = {
-  mainPosts: [
-    {
-      id: 1,
-      User: {
-        id: 1,
-        nickname: "규몽",
-      },
-      content: "첫번째 게시글 #해시태그 해시태그###해시태그",
-      Images: [
-        {
-          id: shortId.generate(),
-          src:
-            "https://img1.daumcdn.net/thumb/C428x428/?scode=mtistory2&fname=https%3A%2F%2Ftistory4.daumcdn.net%2Ftistory%2F4328096%2Fattach%2F032fa1057f75438197365a6da7cc794c",
-        },
-        {
-          id: shortId.generate(),
-          src:
-            "https://img1.daumcdn.net/thumb/C428x428/?scode=mtistory2&fname=https%3A%2F%2Ftistory4.daumcdn.net%2Ftistory%2F4328096%2Fattach%2F032fa1057f75438197365a6da7cc794c",
-        },
-        {
-          id: shortId.generate(),
-          src:
-            "https://img1.daumcdn.net/thumb/C428x428/?scode=mtistory2&fname=https%3A%2F%2Ftistory4.daumcdn.net%2Ftistory%2F4328096%2Fattach%2F032fa1057f75438197365a6da7cc794c",
-        },
-      ],
-      Comments: [
-        {
-          id: shortId.generate(),
-          User: {
-            id: shortId.generate(),
-            nickname: "규몽",
-          },
-          content: "우왕 ㅋ 굳",
-        },
-        {
-          id: shortId.generate(),
-          User: {
-            id: shortId.generate(),
-            nickname: "상도",
-          },
-          content: "ㅅㄷ ㅅㄷ",
-        },
-      ],
-    },
-  ],
+  mainPosts: [],
   imagesPaths: [],
+  hasMorePosts: true, // 가져오려는 시도를 하냐마냐는 상태
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -61,9 +21,9 @@ export const init = {
   addCommetDone: false,
   addCommetError: null,
 };
-init.mainPosts = init.mainPosts.concat(
-  // concat은 대입을 해줘야함 앞에 =
-  Array(20)
+
+export const generateDummyPost = (number) =>
+  Array(number)
     .fill()
     .map((v, i) => ({
       id: shortId.generate(),
@@ -86,8 +46,12 @@ init.mainPosts = init.mainPosts.concat(
           content: faker.lorem.paragraph(),
         },
       ],
-    }))
-);
+    }));
+
+export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
+export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
+export const LOAD_POSTS_FAILURE = "LOAD_POSTS_FAILURE";
+
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
 export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
@@ -132,6 +96,21 @@ const dummyComment = (data) => ({
 const reducer = (state = init, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case LOAD_POSTS_REQUEST:
+        draft.loadPostsLoading = true;
+        draft.loadPostsError = null;
+        draft.loadPostsDone = false;
+        break;
+      case LOAD_POSTS_SUCCESS:
+        draft.mainPosts = action.data.concat(draft.mainPosts); // 기존데이터랑 더미데이터 10개 불러와서 합쳐줌
+        draft.loadPostsLoading = false;
+        draft.loadPostsDone = true;
+        draft.hasMorePosts = draft.mainPosts.length < 50;
+        break;
+      case LOAD_POSTS_FAILURE:
+        draft.loadPostsLoading = false;
+        draft.loadPostsError = action.error;
+        break;
       case ADD_POST_REQUEST:
         draft.addPostLoading = true;
         draft.addPostError = null;
