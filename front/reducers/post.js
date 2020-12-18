@@ -1,6 +1,9 @@
+/** @format */
+
 import React from "react";
 import shortId from "shortid";
 import produce from "immer";
+import faker from "faker";
 export const init = {
   mainPosts: [
     {
@@ -58,7 +61,33 @@ export const init = {
   addCommetDone: false,
   addCommetError: null,
 };
-
+init.mainPosts = init.mainPosts.concat(
+  // concat은 대입을 해줘야함 앞에 =
+  Array(20)
+    .fill()
+    .map((v, i) => ({
+      id: shortId.generate(),
+      User: {
+        id: shortId.generate(),
+        nickname: faker.name.findName(),
+      },
+      content: faker.lorem.paragraph(),
+      Images: [
+        {
+          src: faker.image.image(),
+        },
+      ],
+      Comments: [
+        {
+          User: {
+            id: shortId.generate(),
+            nickname: faker.name.findName(),
+          },
+          content: faker.lorem.paragraph(),
+        },
+      ],
+    }))
+);
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
 export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
