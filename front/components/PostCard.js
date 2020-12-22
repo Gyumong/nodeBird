@@ -1,3 +1,5 @@
+/** @format */
+
 import { Card, Popover, Button, Comment, List, Avatar } from "antd";
 import {
   RetweetOutlined,
@@ -12,7 +14,9 @@ import ButtonGroup from "antd/lib/button/button-group";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
+import FollowButton from "./FollowButton";
 import { REMOVE_POST_REQUEST } from "../reducers/post";
+
 const PostCard = ({ post }) => {
   const [liked, setLiked] = useState(false);
   const [commentFormOpen, setCommentFormOpen] = useState(false);
@@ -71,6 +75,7 @@ const PostCard = ({ post }) => {
             <EllipsisOutlined />
           </Popover>,
         ]}
+        extra={id && <FollowButton post={post} />}
       >
         <Card.Meta
           title={post.User.nickname}
