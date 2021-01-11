@@ -1,7 +1,8 @@
+/** @format */
+
 import { PlusOutlined } from "@ant-design/icons";
 import React, { useState, useCallback } from "react";
 import ImagesZoom from "./ImagesZoom";
-
 const PostImages = ({ images }) => {
   const [showImageZoom, setShowImageZoom] = useState(false);
   const onZoom = useCallback(() => {

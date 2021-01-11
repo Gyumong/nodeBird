@@ -1,10 +1,16 @@
 /** @format */
 
-const http = require("http");
-const server = http.createServer((req, res) => {
-  console.log(req.url, req.method);
-  res.end("hello node");
+const express = require("express");
+const app = express();
+const postRouter = require("/routes/post");
+
+app.get("/", (req, res) => {
+  res.send("hello express");
 });
-server.listen(3080, () => {
+app.get("/api", (req, res) => {
+  res.send("hello api");
+});
+app.use("/post", postRouter);
+app.listen(3080, () => {
   console.log("서버 실행즁");
 });
