@@ -3,7 +3,7 @@
 const express = require("express");
 const app = express();
 const db = require("./models");
-const postRouter = require("/routes/post");
+const postRouter = require("./routes/post");
 db.sequelize
   .sync()
   .then(() => {
