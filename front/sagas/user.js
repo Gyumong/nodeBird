@@ -71,15 +71,14 @@ function* logOut() {
   }
 }
 
-function signUpAPI() {
-  return axios.post("/api/logout");
+function signUpAPI(data) {
+  return axios.post("http://localhost:3080/user", data);
 }
 
-function* signUp() {
-  // 로그아웃은 데이터 받을 필요 없음
+function* signUp(action) {
   try {
-    // const result = yield call(logOutAPI);
-    yield delay(1000);
+    const result = yield call(signUpAPI, action.data);
+    console.log(result);
     yield put({
       type: SIGN_UP_SUCCESS,
     });
