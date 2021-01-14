@@ -1,6 +1,7 @@
 /** @format */
 
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const db = require("./models");
 const postRouter = require("./routes/post");
@@ -11,6 +12,13 @@ db.sequelize
     console.log("db 연결 성공");
   })
   .catch(console.error);
+
+app.use(
+  cors({
+    origin: "*",
+    credentials: false,
+  })
+); // 모든 요청에 허용
 
 // 밑 두줄은 프론트에서 보낸 데이터를 req.body에 넣어주는 역할을 해줌
 // 위치는 위에 있어야한다. 순서중요

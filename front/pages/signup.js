@@ -1,7 +1,12 @@
-/* eslint-disable no-unused-vars */
+/**
+ * /* eslint-disable no-unused-vars
+ *
+ * @format
+ */
+
 /* eslint-disable import/newline-after-import */
 /* eslint-disable import/order */
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import AppLayout from "../components/AppLayout";
 import Head from "next/head";
 import useInput from "../hooks/useInput";
@@ -9,6 +14,7 @@ import { Form, Input, Checkbox, Button } from "antd";
 import styled from "styled-components";
 import { SIGN_UP_REQUEST } from "../reducers/user";
 import { useDispatch, useSelector } from "react-redux";
+import Router from "next/router";
 const ErrorMessage = styled.div`
   color: red;
 `;
@@ -20,7 +26,9 @@ const Signup = () => {
   const [passwordError, setPasswordError] = useState(false);
 
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError } = useSelector(
+    (state) => state.user
+  );
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordCheck(e.target.value);
@@ -31,6 +39,19 @@ const Signup = () => {
 
   const [term, setTerm] = useState("");
   const [termError, setTermError] = useState(false);
+
+  useEffect(() => {
+    if (signUpDone) {
+      Router.push("/");
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
+
   const onChangeTerm = useCallback((e) => {
     setTerm(e.target.checked);
     setTermError(false);
