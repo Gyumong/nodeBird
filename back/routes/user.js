@@ -1,10 +1,33 @@
 /** @format */
 
 const express = require("express");
-const router = express.Router();
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 const { User } = require("../models");
 
+const router = express.Router();
+
+// 미들웨어 확장으로 passpost.auth~에서 next를 못쓰는데 쓸수있게 확장
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    // return done 인자 3개가 전달된거
+    if (err) {
+      console.error(err);
+      return next(err);
+    }
+    if (info) {
+      // client 에러
+      return res.status(401).send(info.reason);
+    }
+    return req.login(user, async (loginErr) => {
+      if (loginErr) {
+        console.error(loginErr);
+        return next(loginErr);
+      }
+      return res.json(user);
+    });
+  })(req, res, next);
+});
 router.post("/", async (req, res, next) => {
   // POST /user/
   try {
