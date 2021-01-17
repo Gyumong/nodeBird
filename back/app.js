@@ -1,13 +1,16 @@
 /** @format */
-
 const express = require("express");
 const cors = require("cors");
-
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const passport = require("passport");
+const dotenv = require("dotenv");
 const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
 const db = require("./models");
 const passportConfig = require("./passport");
 
+dotenv.config();
 const app = express();
 db.sequelize
   .sync()
@@ -30,6 +33,16 @@ app.use(
 app.use(express.json());
 // form submit url인코딩을 form data를 req.body에 넣어줌
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(session());
+app.use(passport.initialize());
+app.use(
+  passport.session({
+    saveUninitalized: false,
+    resave: false,
+    secret: process.env.COOKIE_SECRET, // 쿠키에 보내는 랜덤한 문자열
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("hello express");

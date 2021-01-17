@@ -3,7 +3,8 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-const { User } = require("../models");
+const { User, Post } = require("../models");
+const db = require("../models");
 
 const router = express.Router();
 
@@ -24,7 +25,28 @@ router.post("/login", (req, res, next) => {
         console.error(loginErr);
         return next(loginErr);
       }
-      return res.json(user);
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: user.id },
+        attributes: {
+          // 비밀번호만 빼고 가져오겠다 할때
+          exclude: ["password"],
+        },
+        // user data에 Followings랑 followers 같은거나 Post 정보 합치기
+        include: [
+          {
+            model: Post,
+          },
+          {
+            model: User,
+            as: "Followings",
+          },
+          {
+            model: User,
+            as: "Followers,",
+          },
+        ],
+      });
+      return res.status(200).json(user);
     });
   })(req, res, next);
 });
@@ -53,6 +75,12 @@ router.post("/", async (req, res, next) => {
     console.error(e);
     next(e); // next를 통해 error를 보냄 status 500
   }
+});
+
+router.post("/user/logout", (req, res) => {
+  req.logOut();
+  req.session.destroy();
+  res.send("ok");
 });
 
 module.exports = router;
