@@ -14,7 +14,7 @@ module.exports = () => {
       done(null, user);
     } catch (e) {
       console.error(e);
-      done(error);
+      done(e);
     }
   });
   local();

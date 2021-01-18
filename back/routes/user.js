@@ -42,11 +42,11 @@ router.post("/login", (req, res, next) => {
           },
           {
             model: User,
-            as: "Followers,",
+            as: "Followers",
           },
         ],
       });
-      return res.status(200).json(user);
+      return res.status(200).json(fullUserWithoutPassword);
     });
   })(req, res, next);
 });

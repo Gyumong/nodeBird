@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from "react";
+/** @format */
+
+import React, { useState, useCallback, useEffect } from "react";
 import { Button, Form, Input } from "antd";
 import Link from "next/link";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
-import { LOG_IN_REQUEST } from "../reducers/user";
+import { loginRequestAction } from "../reducers/user";
 
 const ButtonBlock = styled.div`
   margin-top: 10px;
@@ -14,20 +16,19 @@ const FormBlock = styled(Form)`
   padding: 10px;
 `;
 const LoginForm = () => {
-  const { logInLoading } = useSelector((state) => state.user);
+  const { logInLoading, logInError } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [email, onChangeEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
 
+  useEffect(() => {
+    if (logInError) {
+      alert(logInError);
+    }
+  }, [logInError]);
   const onSubmitForm = useCallback(() => {
     console.log(email, password);
-    dispatch({
-      type: LOG_IN_REQUEST,
-      data: {
-        email,
-        password,
-      },
-    });
+    dispatch(loginRequestAction({ email, password }));
   }, [email, password]);
   return (
     <FormBlock onFinish={onSubmitForm}>
