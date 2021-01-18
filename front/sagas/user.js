@@ -58,8 +58,7 @@ function logOutAPI() {
 function* logOut() {
   // 로그아웃은 데이터 받을 필요 없음
   try {
-    // const result = yield call(logOutAPI);
-    yield delay(1000);
+    const result = yield call(logOutAPI);
     yield put({
       type: LOG_OUT_SUCCESS,
     });
