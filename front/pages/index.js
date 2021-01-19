@@ -6,6 +6,7 @@ import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
 import { useSelector, useDispatch } from "react-redux";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
@@ -13,6 +14,10 @@ const Home = () => {
     (state) => state.post
   );
   useEffect(() => {
+    dispatch({
+      // 페이지 접속시 사용자 정보 불러옴
+      type: LOAD_MY_INFO_REQUEST,
+    });
     // 메인페이지 불러올때 LOAD_POSTS_REQUEST 호출해줌
     dispatch({
       type: LOAD_POSTS_REQUEST,

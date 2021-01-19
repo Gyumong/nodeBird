@@ -74,25 +74,6 @@ export const addComment = (data) => ({
   data,
 });
 
-const dummyPost = (data) => ({
-  id: data.id,
-  content: data.content,
-  User: {
-    id: 1,
-    nickname: "밈구",
-  },
-  Images: [],
-  Comments: [],
-});
-
-const dummyComment = (data) => ({
-  id: shortId.generate(),
-  content: data,
-  User: {
-    id: 1,
-    nickname: "밈구",
-  },
-});
 const reducer = (state = init, action) =>
   produce(state, (draft) => {
     switch (action.type) {
@@ -117,7 +98,7 @@ const reducer = (state = init, action) =>
         draft.addPostDone = false;
         break;
       case ADD_POST_SUCCESS:
-        draft.mainPosts.unshift(dummyPost(action.data)); // 앞에다 추가해야 게시글 맨 앞에옴
+        draft.mainPosts.unshift(action.data); // 앞에다 추가해야 게시글 맨 앞에옴
         draft.addPostLoading = false;
         draft.addPostDone = true;
         break;
@@ -145,8 +126,8 @@ const reducer = (state = init, action) =>
         draft.addCommentPostDone = false;
         break;
       case ADD_COMMENT_SUCCESS:
-        const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-        post.Comments.unshift(dummyComment(action.data.content));
+        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+        post.Comments.unshift(action.data);
         draft.addCommetLoading = false;
         draft.addCommetDone = true;
         break;

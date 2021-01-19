@@ -22,8 +22,8 @@ passportConfig();
 
 app.use(
   cors({
-    origin: "*",
-    credentials: false,
+    origin: "http://localhost:3000", // credentials:true로 쿠키전역공유했으니 *로는 보안안되고 정확한주소를적어야댐
+    credentials: true,
   })
 ); // 모든 요청에 허용
 

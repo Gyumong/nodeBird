@@ -30,7 +30,7 @@ import {
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 
 function AddPostAPI(data) {
-  return Axios.post("/api/post", data);
+  return Axios.post("/post", { content: data });
 }
 
 function* loadPost(action) {
@@ -51,18 +51,14 @@ function* loadPost(action) {
 
 function* addPost(action) {
   try {
-    // const result = yield call(AddPostAPI, action.data);
-    const id = shortid.generate();
+    const result = yield call(AddPostAPI, action.data);
     yield put({
       type: ADD_POST_SUCCESS,
-      data: {
-        id,
-        content: action.data,
-      },
+      data: result.data,
     });
     yield put({
       type: ADD_POST_TO_ME,
-      data: id,
+      data: result.data.id,
     });
   } catch (e) {
     yield put({
@@ -97,14 +93,14 @@ function* removePost(action) {
 }
 
 function CommentAPI(data) {
-  return Axios.post(`/api/post/${data.postId}/comment`, data);
+  return Axios.post(`/post/${data.postId}/comment`, data); // Post /post/1/comment
 }
 function* addComment(action) {
   try {
-    // const result = yield call(CommentAPI, action.data);
+    const result = yield call(CommentAPI, action.data);
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (e) {
     yield put({

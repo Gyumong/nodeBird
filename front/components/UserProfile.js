@@ -1,14 +1,14 @@
+/** @format */
+
 import React, { useCallback } from "react";
 import { Card, Avatar, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { LOG_OUT_REQUEST } from "../reducers/user";
+import { logoutRequestAction } from "../reducers/user";
 const UserProfile = () => {
   const { me, logOutLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const onLogOut = useCallback(() => {
-    dispatch({
-      type: LOG_OUT_REQUEST,
-    });
+    dispatch(logoutRequestAction());
   }, []);
   return (
     <Card
