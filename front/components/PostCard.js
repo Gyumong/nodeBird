@@ -15,18 +15,30 @@ import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
 import FollowButton from "./FollowButton";
-import { REMOVE_POST_REQUEST } from "../reducers/post";
+import {
+  REMOVE_POST_REQUEST,
+  LIKE_POST_REQUEST,
+  UNLIKE_POST_REQUEST,
+} from "../reducers/post";
 
 const PostCard = ({ post }) => {
-  const [liked, setLiked] = useState(false);
   const [commentFormOpen, setCommentFormOpen] = useState(false);
   const id = useSelector((state) => state.user.me?.id);
   const { removePostLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();
   // 옵셔널 체이닝연산자 보호연산자를 단축한거임
 
-  const onToggleLiked = useCallback(() => {
-    setLiked((prev) => !prev);
+  const onLike = useCallback(() => {
+    dispatch({
+      type: LIKE_POST_REQUEST,
+      data: post.id,
+    });
+  });
+  const onUnlike = useCallback(() => {
+    dispatch({
+      type: UNLIKE_POST_REQUEST,
+      data: post.id,
+    });
   });
   const onToggleComment = useCallback(() => {
     setCommentFormOpen((prev) => !prev);
@@ -37,7 +49,7 @@ const PostCard = ({ post }) => {
       data: post.id,
     });
   }, []);
-
+  const liked = post.Likers.find((v) => v.id === id);
   return (
     <div style={{ marginBottom: 20 }}>
       <Card
@@ -45,9 +57,9 @@ const PostCard = ({ post }) => {
         actions={[
           <RetweetOutlined key="retweet" />,
           liked ? (
-            <HeartOutlined key="heart" onClick={onToggleLiked} />
+            <HeartTwoTone twoToneColor="#eb2f96" onClick={onUnlike} />
           ) : (
-            <HeartTwoTone twoToneColor="#eb2f96" onClick={onToggleLiked} />
+            <HeartOutlined key="heart" onClick={onLike} />
           ),
           <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover

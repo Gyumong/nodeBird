@@ -1,13 +1,18 @@
 /** @format */
 
 import React from "react";
-import shortId from "shortid";
 import produce from "immer";
-import faker from "faker";
+
 export const init = {
   mainPosts: [],
   imagesPaths: [],
   hasMorePosts: true, // 가져오려는 시도를 하냐마냐는 상태
+  liePostLoading: false,
+  likePostDone: false,
+  likePostError: null,
+  unliePostLoading: false,
+  unlikePostDone: false,
+  unlikePostError: null,
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
@@ -22,31 +27,13 @@ export const init = {
   addCommetError: null,
 };
 
-export const generateDummyPost = (number) =>
-  Array(number)
-    .fill()
-    .map((v, i) => ({
-      id: shortId.generate(),
-      User: {
-        id: shortId.generate(),
-        nickname: faker.name.findName(),
-      },
-      content: faker.lorem.paragraph(),
-      Images: [
-        {
-          src: faker.image.image(),
-        },
-      ],
-      Comments: [
-        {
-          User: {
-            id: shortId.generate(),
-            nickname: faker.name.findName(),
-          },
-          content: faker.lorem.paragraph(),
-        },
-      ],
-    }));
+export const LIKE_POST_REQUEST = "LIKE_POST_REQUEST";
+export const LIKE_POST_SUCCESS = "LIKE_POST_SUCCESS";
+export const LIKE_POST_FAILURE = "LIKE_POST_FAILURE";
+
+export const UNLIKE_POST_REQUEST = "UNLIKE_POST_REQUEST";
+export const UNLIKE_POST_SUCCESS = "UNLIKE_POST_SUCCESS";
+export const UNLIKE_POST_FAILURE = "UNLIKE_POST_FAILURE";
 
 export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
 export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
@@ -77,6 +64,38 @@ export const addComment = (data) => ({
 const reducer = (state = init, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case LIKE_POST_REQUEST:
+        draft.likePostLoading = true;
+        draft.likePostError = null;
+        draft.likePostDone = false;
+        break;
+      case LIKE_POST_SUCCESS: {
+        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+        post.Likers.push({ id: action.data.UserId });
+        draft.likePostLoading = false;
+        draft.likePostDone = true;
+        break;
+      }
+      case LIKE_POST_FAILURE:
+        draft.likePostLoading = false;
+        draft.likePostError = action.error;
+        break;
+      case UNLIKE_POST_REQUEST:
+        draft.unlikePostLoading = true;
+        draft.unlikePostError = null;
+        draft.unlikePostDone = false;
+        break;
+      case UNLIKE_POST_SUCCESS: {
+        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+        post.Likers = post.Likers.filter((v) => v.id !== action.data.UserId);
+        draft.unlikePostLoading = false;
+        draft.unlikePostDone = true;
+        break;
+      }
+      case UNLIKE_POST_FAILURE:
+        draft.unlikePostLoading = false;
+        draft.unlikePostError = action.error;
+        break;
       case LOAD_POSTS_REQUEST:
         draft.loadPostsLoading = true;
         draft.loadPostsError = null;
@@ -125,19 +144,20 @@ const reducer = (state = init, action) =>
         draft.addCommentPostError = null;
         draft.addCommentPostDone = false;
         break;
-      case ADD_COMMENT_SUCCESS:
+      case ADD_COMMENT_SUCCESS: {
         const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
         post.Comments.unshift(action.data);
         draft.addCommetLoading = false;
         draft.addCommetDone = true;
         break;
+      }
       // const postIndex = state.mainPosts.findIndex(
       //   (v) => v.id === action.data.postId
       // );
-      // const post = { ...state.mainPosts[postIndex] };
-      // post.Comments = [dummyComment(action.data.content), ...post.Comments];
+      // const psost = { ...state.mainPosts[postIndex] };
+      // psost.Comments = [dummyComment(action.data.content), ...psost.Comments];
       // const mainPosts = [...state.mainPosts];
-      // mainPosts[postIndex] = post;
+      // mainPosts[postIndex] = psost;
       // return {
       //   ...state,
       //   mainPosts,
