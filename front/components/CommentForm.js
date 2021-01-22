@@ -1,3 +1,5 @@
+/** @format */
+
 import { Input, Button, Form } from "antd";
 import React, { useCallback, useEffect } from "react";
 import useInput from "../hooks/useInput";
@@ -26,6 +28,7 @@ const CommentForm = ({ post }) => {
     });
     console.log(post.id, commentText);
   }, [commentText, id]);
+
   return (
     <Form onFinish={onSubmit}>
       <Form.Item style={{ position: "relative", margin: 0 }}>
