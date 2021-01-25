@@ -58,6 +58,7 @@ export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 
+export const REMOVE_IMAGE = "REMOVE_IMAGE";
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
   data,
@@ -71,6 +72,10 @@ export const addComment = (data) => ({
 const reducer = (state = init, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case REMOVE_IMAGE:
+        draft.imagesPaths = draft.imagesPaths.filter(
+          (v, i) => i !== action.data
+        );
       case UPLOAD_IMAGES_REQUEST:
         draft.uploadImagesLoading = true;
         draft.uploadImagesError = null;
@@ -142,6 +147,7 @@ const reducer = (state = init, action) =>
         draft.mainPosts.unshift(action.data); // 앞에다 추가해야 게시글 맨 앞에옴
         draft.addPostLoading = false;
         draft.addPostDone = true;
+        draft.imagesPaths = [];
         break;
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;

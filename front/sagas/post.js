@@ -39,7 +39,7 @@ import {
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 
 function AddPostAPI(data) {
-  return Axios.post("/post", { content: data });
+  return Axios.post("/post", data);
 }
 function loadPostsAPI(data) {
   return Axios.get("/posts");
