@@ -12,6 +12,9 @@ import {
 } from "redux-saga/effects";
 import shortid from "shortid";
 import {
+  LOAD_POST_REQUEST,
+  LOAD_POST_SUCCESS,
+  LOAD_POST_FAILURE,
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   LOAD_POSTS_FAILURE,
@@ -48,7 +51,7 @@ function loadPostsAPI(lastId) {
   return Axios.get(`/posts?lastId=${lastId || 0}`);
 }
 
-function* loadPost(action) {
+function* loadPosts(action) {
   try {
     const result = yield call(loadPostsAPI, action.lastId);
     yield put({
@@ -59,6 +62,26 @@ function* loadPost(action) {
     console.error(e);
     yield put({
       type: LOAD_POSTS_FAILURE,
+      error: e.response.data,
+    });
+  }
+}
+
+function loadPostAPI(data) {
+  return Axios.get(`/post/${data}`);
+}
+
+function* loadPost(action) {
+  try {
+    const result = yield call(loadPostAPI, action.data);
+    yield put({
+      type: LOAD_POST_SUCCESS,
+      data: result.data, // 리듀서에서 만든 더미포스트 함수를 가져와서 10개를 요청 성공시 만들어준다.
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: LOAD_POST_FAILURE,
       error: e.response.data,
     });
   }
@@ -215,7 +238,10 @@ function* watchAddComment() {
 }
 
 function* watchLoadPost() {
-  yield throttle(5000, LOAD_POSTS_REQUEST, loadPost);
+  yield takeLatest(LOAD_POST_REQUEST, loadPost);
+}
+function* watchLoadPosts() {
+  yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
 }
 function* watchLikePost() {
   yield takeLatest(LIKE_POST_REQUEST, likePost);
@@ -239,6 +265,7 @@ export default function* postSaga() {
     fork(watchAddPost),
     fork(watchAddComment),
     fork(watchRemovePost),
+    fork(watchLoadPosts),
     fork(watchLoadPost),
   ]);
 }

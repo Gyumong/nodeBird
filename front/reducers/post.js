@@ -4,6 +4,7 @@ import React from "react";
 import produce from "immer";
 
 export const init = {
+  singlePost: null,
   mainPosts: [],
   imagesPaths: [],
   hasMorePosts: true, // 가져오려는 시도를 하냐마냐는 상태
@@ -13,6 +14,9 @@ export const init = {
   unliePostLoading: false,
   unlikePostDone: false,
   unlikePostError: null,
+  loadPostLoading: false,
+  loadPostDone: false,
+  loadPostError: null,
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
@@ -44,6 +48,10 @@ export const LIKE_POST_FAILURE = "LIKE_POST_FAILURE";
 export const UNLIKE_POST_REQUEST = "UNLIKE_POST_REQUEST";
 export const UNLIKE_POST_SUCCESS = "UNLIKE_POST_SUCCESS";
 export const UNLIKE_POST_FAILURE = "UNLIKE_POST_FAILURE";
+
+export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
+export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
+export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
 
 export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
 export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
@@ -145,6 +153,21 @@ const reducer = (state = init, action) =>
       case UNLIKE_POST_FAILURE:
         draft.unlikePostLoading = false;
         draft.unlikePostError = action.error;
+        break;
+      case LOAD_POST_REQUEST:
+        draft.loadPostLoading = true;
+        draft.loadPostError = null;
+        draft.loadPostDone = false;
+        break;
+      case LOAD_POST_SUCCESS:
+        draft.singlePost = action.data;
+        draft.loadPostLoading = false;
+        draft.loadPostDone = true;
+
+        break;
+      case LOAD_POST_FAILURE:
+        draft.loadPostLoading = false;
+        draft.loadPostError = action.error;
         break;
       case LOAD_POSTS_REQUEST:
         draft.loadPostsLoading = true;
