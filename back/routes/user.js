@@ -47,6 +47,49 @@ router.get("/", async (req, res, next) => {
     next(e);
   }
 });
+
+router.get("/:userId", async (req, res, next) => {
+  //GET/user/1
+
+  try {
+    const fullUserWithoutPassword = await User.findOne({
+      where: { id: req.params.userId },
+      attributes: {
+        // 비밀번호만 빼고 가져오겠다 할때
+        exclude: ["password"],
+      },
+      // user data에 Followings랑 followers 같은거나 Post 정보 합치기
+      include: [
+        {
+          model: Post,
+          attributes: ["id"],
+        },
+        {
+          model: User,
+          as: "Followings",
+          attributes: ["id"],
+        },
+        {
+          model: User,
+          as: "Followers",
+          attributes: ["id"],
+        },
+      ],
+    });
+    if (fullUserWithoutPassword) {
+      const data = fullUserWithoutPassword.toJSON(); // 개인정보 침해 예방
+      data.Posts = data.Posts.length;
+      data.Followers = data.Followers.length;
+      data.Followings = data.Followings.length;
+      res.status(200).json(data);
+    } else {
+      res.status(404).json("존재하지 않는 사용자 입니다.");
+    }
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
 // 미들웨어 확장으로 passpost.auth~에서 next를 못쓰는데 쓸수있게 확장
 router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
