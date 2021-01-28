@@ -41,8 +41,10 @@ const Home = () => {
       ) {
         if (hasMorePosts && !loadPostsLoading) {
           //다 불러왓거나 불러오는중이면 요청을 보내지않는다.
+          const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
+            lastId,
           });
         }
       }
@@ -51,7 +53,7 @@ const Home = () => {
     return () => {
       window.removeEventListener("scroll", onScroll); // useEffect에서 만든 add이벤트를 없애줘야함 리턴함수에서 안그럼 데이터 계속 축적되있음
     };
-  }, [hasMorePosts, loadPostsLoading]);
+  }, [hasMorePosts, loadPostsLoading, mainPosts]);
   return (
     <AppLayout>
       {me && <PostForm />}

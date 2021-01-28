@@ -44,13 +44,13 @@ import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 function AddPostAPI(data) {
   return Axios.post("/post", data);
 }
-function loadPostsAPI(data) {
-  return Axios.get("/posts");
+function loadPostsAPI(lastId) {
+  return Axios.get(`/posts?lastId=${lastId || 0}`);
 }
 
 function* loadPost(action) {
   try {
-    const result = yield call(loadPostsAPI, action.data);
+    const result = yield call(loadPostsAPI, action.lastId);
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data, // 리듀서에서 만든 더미포스트 함수를 가져와서 10개를 요청 성공시 만들어준다.
