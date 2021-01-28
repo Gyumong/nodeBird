@@ -7,6 +7,9 @@ import PostCard from "../components/PostCard";
 import { useSelector, useDispatch } from "react-redux";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import { END } from "redux-saga";
+import wrapper from "../store/configureStore";
+import Axios from "axios";
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
@@ -22,16 +25,6 @@ const Home = () => {
       alert(retweetError);
     }
   }, [retweetError]);
-  useEffect(() => {
-    dispatch({
-      // 페이지 접속시 사용자 정보 불러옴
-      type: LOAD_MY_INFO_REQUEST,
-    });
-    // 메인페이지 불러올때 LOAD_POSTS_REQUEST 호출해줌
-    dispatch({
-      type: LOAD_POSTS_REQUEST,
-    });
-  }, []);
 
   useEffect(() => {
     function onScroll() {
@@ -63,5 +56,24 @@ const Home = () => {
     </AppLayout>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    const cookie = context.req ? context.req.headers.cookie : "";
+    Axios.defaults.headers.Cookie = "";
+    if (context.req && cookie) {
+      Axios.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch({
+      // 페이지 접속시 사용자 정보 불러옴
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    context.store.dispatch({
+      type: LOAD_POSTS_REQUEST,
+    });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+  }
+);
 
 export default Home;
