@@ -1,5 +1,5 @@
 /** @format */
-
+// 개별 페이지
 import { useRouter } from "next/router";
 import { END } from "redux-saga";
 import Axios from "axios";
