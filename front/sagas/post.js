@@ -18,6 +18,12 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   LOAD_POSTS_FAILURE,
+  LOAD_HASHTAG_POSTS_REQUEST,
+  LOAD_HASHTAG_POSTS_SUCCESS,
+  LOAD_HASHTAG_POSTS_FAILURE,
+  LOAD_USER_POSTS_REQUEST,
+  LOAD_USER_POSTS_SUCCESS,
+  LOAD_USER_POSTS_FAILURE,
   ADD_POST_REQUEST,
   ADD_POST_SUCCESS,
   ADD_POST_FAILURE,
@@ -67,6 +73,47 @@ function* loadPosts(action) {
   }
 }
 
+function loadHashtagPostsAPI(data, lastId) {
+  return Axios.get(
+    `/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`
+  );
+}
+
+function* loadHashtagPosts(action) {
+  try {
+    const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
+    yield put({
+      type: LOAD_HASHTAG_POSTS_SUCCESS,
+      data: result.data, // 리듀서에서 만든 더미포스트 함수를 가져와서 10개를 요청 성공시 만들어준다.
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: LOAD_HASHTAG_POSTS_FAILURE,
+      error: e.response.data,
+    });
+  }
+}
+
+function loadUserPostsAPI(data, lastId) {
+  return Axios.get(`/user/${data}/posts?lastId=${lastId || 0}`);
+}
+
+function* loadUserPosts(action) {
+  try {
+    const result = yield call(loadUserPostsAPI, action.data, action.lastId);
+    yield put({
+      type: LOAD_USER_POSTS_SUCCESS,
+      data: result.data, // 리듀서에서 만든 더미포스트 함수를 가져와서 10개를 요청 성공시 만들어준다.
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: LOAD_USER_POSTS_FAILURE,
+      error: e.response.data,
+    });
+  }
+}
 function loadPostAPI(data) {
   return Axios.get(`/post/${data}`);
 }
@@ -243,6 +290,12 @@ function* watchLoadPost() {
 function* watchLoadPosts() {
   yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
 }
+function* watchUserLoadPosts() {
+  yield throttle(5000, LOAD_USER_POSTS_REQUEST, loadUserPosts);
+}
+function* watchHashtagLoadPosts() {
+  yield throttle(5000, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+}
 function* watchLikePost() {
   yield takeLatest(LIKE_POST_REQUEST, likePost);
 }
@@ -266,6 +319,8 @@ export default function* postSaga() {
     fork(watchAddComment),
     fork(watchRemovePost),
     fork(watchLoadPosts),
+    fork(watchUserLoadPosts),
+    fork(watchHashtagLoadPosts),
     fork(watchLoadPost),
   ]);
 }
