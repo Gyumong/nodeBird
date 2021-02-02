@@ -21,6 +21,10 @@ import {
   UNLIKE_POST_REQUEST,
   RETWEET_REQUEST,
 } from "../reducers/post";
+import Link from "next/link";
+import moment from "moment";
+
+moment.locale("ko"); // 모멘트 한글로 바꿔줌
 
 const PostCard = ({ post }) => {
   const [commentFormOpen, setCommentFormOpen] = useState(false);
@@ -122,18 +126,38 @@ const PostCard = ({ post }) => {
               )
             }
           >
+            <div style={{ float: "right" }}>
+              {moment(post.createAt).startOf("day").fromNow()}
+            </div>
             <Card.Meta
               title={post.Retweet.User.nickname}
               description={<PostCardContent postData={post.Retweet.content} />}
-              avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
+              avatar={
+                <Link href={`/user/${post.Retweet.User.id}`}>
+                  <a>
+                    <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
+                  </a>
+                </Link>
+              }
             />
           </Card>
         ) : (
-          <Card.Meta
-            title={post.User.nickname}
-            description={<PostCardContent postData={post.content} />}
-            avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-          />
+          <>
+            <div style={{ float: "right" }}>
+              {moment(post.createAt).startOf("day").fromNow()}
+            </div>
+            <Card.Meta
+              title={post.User.nickname}
+              description={<PostCardContent postData={post.content} />}
+              avatar={
+                <Link href={`/user/${post.User.id}`}>
+                  <a>
+                    <Avatar>{post.User.nickname[0]}</Avatar>
+                  </a>
+                </Link>
+              }
+            />
+          </>
         )}
       </Card>
       {commentFormOpen && (
@@ -146,7 +170,13 @@ const PostCard = ({ post }) => {
             renderItem={(item) => (
               <li>
                 <Comment
-                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  avatar={
+                    <Link href={`/user/${item.User.id}`}>
+                      <a>
+                        <Avatar>{item.User.nickname[0]}</Avatar>
+                      </a>
+                    </Link>
+                  }
                   author={item.User.nickname}
                   content={item.content}
                 />

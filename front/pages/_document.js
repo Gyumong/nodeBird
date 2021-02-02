@@ -8,24 +8,24 @@ export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
+
     try {
       ctx.renderPage = () =>
         originalRenderPage({
           enhanceApp: (App) => (props) =>
             sheet.collectStyles(<App {...props} />),
         });
-      const initalProps = await Document.getInitialProps(ctx);
+
+      const initialProps = await Document.getInitialProps(ctx);
       return {
-        ...initalProps,
+        ...initialProps,
         styles: (
           <>
-            {initalProps.styles}
+            {initialProps.styles}
             {sheet.getStyleElement()}
           </>
         ),
       };
-    } catch (e) {
-      console.error(e);
     } finally {
       sheet.seal();
     }

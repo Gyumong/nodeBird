@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+/** @format */
+
+import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { Menu, Input, Row, Col } from "antd";
@@ -6,6 +8,8 @@ import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
 import styled, { createGlobalStyle } from "styled-components";
 import { useSelector } from "react-redux";
+import useInput from "../hooks/useInput";
+import Router from "next/router";
 
 const Global = createGlobalStyle`
   .ant-row {
@@ -28,6 +32,11 @@ const SearchInput = styled(Input.Search)`
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
   //  const me = useSelector((state) => state.user); << 구조분해로 me 안가져와서 전체 객체 받아와가지고 한참 에러남
+  const [searchInput, onChangeSearchInput] = useInput("");
+
+  const onSearch = useCallback(() => {
+    Router.push(`/hashtag/${searchInput}`);
+  }, [searchInput]);
   return (
     <div>
       <Menu mode="horizontal">
@@ -42,7 +51,12 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item>
-          <SearchInput enterButton />
+          <SearchInput
+            enterButton
+            value={searchInput}
+            onChange={onChangeSearchInput}
+            onSearch={onSearch}
+          />
         </Menu.Item>
         <Menu.Item>
           <Link href="/signup">
