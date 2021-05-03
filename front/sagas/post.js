@@ -123,7 +123,7 @@ function* loadPost(action) {
     const result = yield call(loadPostAPI, action.data);
     yield put({
       type: LOAD_POST_SUCCESS,
-      data: result.data, // 리듀서에서 만든 더미포스트 함수를 가져와서 10개를 요청 성공시 만들어준다.
+      data: result.data,
     });
   } catch (e) {
     console.error(e);
