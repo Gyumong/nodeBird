@@ -2,6 +2,7 @@
 
 import { PlusOutlined } from "@ant-design/icons";
 import React, { useState, useCallback } from "react";
+import { backUrl } from "../config/config";
 import ImagesZoom from "./ImagesZoom";
 const PostImages = ({ images }) => {
   const [showImageZoom, setShowImageZoom] = useState(false);
@@ -16,8 +17,8 @@ const PostImages = ({ images }) => {
     return (
       <>
         <img
-          src={`http://localhost:3080/${images[0].src}`}
-          alt={`http://localhost:3080/${images[0].src}`}
+          src={`${backUrl}/${images[0].src}`}
+          alt={`${backUrl}/${images[0].src}`}
           style={{ width: "50%", display: "inline-block" }}
           onClick={onZoom}
         />
@@ -29,14 +30,14 @@ const PostImages = ({ images }) => {
     return (
       <>
         <img
-          src={`http://localhost:3080/${images[0].src}`}
-          alt={`http://localhost:3080/${images[0].src}`}
+          src={`${backUrl}/${images[0].src}`}
+          alt={`${backUrl}/${images[0].src}`}
           style={{ width: "50%", display: "inline-block" }}
           onClick={onZoom}
         />
         <img
-          src={`http://localhost:3080/${images[1].src}`}
-          alt={`http://localhost:3080/${images[1].src}`}
+          src={`${backUrl}/${images[1].src}`}
+          alt={`${backUrl}/${images[1].src}`}
           style={{ width: "50%", display: "inline-block" }}
           onClick={onZoom}
         />
@@ -47,8 +48,8 @@ const PostImages = ({ images }) => {
   return (
     <>
       <img
-        src={`http://localhost:3080/${images[0].src}`}
-        alt={`http://localhost:3080/${images[0].src}`}
+        src={`${backUrl}/${images[0].src}`}
+        alt={`${backUrl}/${images[0].src}`}
         style={{ width: "50%", display: "inline-block" }}
         onClick={onZoom}
       />
