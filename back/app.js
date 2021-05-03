@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
+const hpp = require("hpp");
+const helmet = require("helmet");
 const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
@@ -23,11 +25,19 @@ db.sequelize
   .catch(console.error);
 passportConfig();
 
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("combined"));
+  app.use(hpp());
+  app.use(helmet());
+} else {
+  app.use(morgan("dev"));
+}
+
 app.use(morgan("dev"));
 
 app.use(
   cors({
-    origin: "http://localhost:3000", // credentials:true로 쿠키전역공유했으니 *로는 보안안되고 정확한주소를적어야댐
+    origin: ["http://localhost:3000", "nodebird.com"], // credentials:true로 쿠키전역공유했으니 *로는 보안안되고 정확한주소를적어야댐
     credentials: true,
   })
 ); // 모든 요청에 허용
